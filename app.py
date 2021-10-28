@@ -5,6 +5,7 @@ from pyspark.context import SparkContext
 from pyspark.sql import SparkSession
 from awsglue.context import GlueContext
 from awsglue.job import Job
+import logging
 
 
 #List of params passed
@@ -12,7 +13,7 @@ params = ["data_s3_bucket","data_s3_path","glue_db_name","db_s3_path"]
 #Generate glue context entry point
 glctxt = GlueContext(SparkContext.getOrCreate())
 spark = glctxt.spark_session
-logger = glctxt.get_logger()
+logger = logging.getLogger()
 
 args = getResolvedOptions(sys.argv, params)
 
