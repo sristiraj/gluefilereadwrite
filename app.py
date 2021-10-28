@@ -31,7 +31,10 @@ for path in s3_paths:
     logger.info("Writing data for data {}".format(path))
     df = spark.read.option("inferSchema","true").option("header","true").csv("s3://{}/{}*".format(s3_bucket, path))
     
-    tbl_name = path[path.rfind("/", 0)+1:].strip()
+    if path.rfind("/", 0) != -1:
+        tbl_name = path[path.rfind("/", 0)+1:].strip()
+    else:
+        tbl_name = path.strip()
     logger.info("Started writing to table {}".format(tbl_name))
     df.write.format("parquet").mode("overwrite").option("header","true").option("path","s3://{}/{}/{}".format(s3_bucket, db_s3_path, tbl_name)).saveAsTable("{}.{}".format(glue_db_name, tbl_name))    
     
