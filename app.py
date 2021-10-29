@@ -42,7 +42,7 @@ for idx, path in enumerate(s3_paths):
     print(sep)
     read_path = "s3://{}/{}/" if "." not in path else "s3://{}/{}"
     print(read_path.format(s3_bucket, path.strip("/")))
-    df = spark.read.option("delimiter",sep).option("header","true").option("unescapedQuoteHandling","STOP_AT_DELIMITER").csv(read_path.format(s3_bucket, path.strip("/")))
+    df = spark.read.option("delimiter",sep).option("header","true").option("quote","\"").csv(read_path.format(s3_bucket, path.strip("/")), unescapedQuoteHandling="STOP_AT_DELIMITER")
     if path.strip("/").rfind("/", 0) != -1:
         tbl_name = path[path.strip("/").rfind("/", 0)+1:].strip("/").strip()
     else:
