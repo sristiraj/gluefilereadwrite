@@ -51,12 +51,12 @@ for idx, path in enumerate(s3_paths):
         tbl_name = tbl_name[:tbl_name.find(".")]
     print(tbl_name)    
     logger.info("Started writing to table {}".format(tbl_name))
-    df.createOrReplaceTempView("tmp_"+tbl_name)
+    df.createOrReplaceTempView("tmp_"+tbl_name.replace("-","_"))
     new_cols = "select  "
     for col in df.columns:
         new_cols += "trim("+col+") as "+col.strip()+","
 
-    new_cols = new_cols[:len(new_cols)-1] +" from tmp_"+tbl_name
+    new_cols = new_cols[:len(new_cols)-1] +" from tmp_"+tbl_name.replace("-","_")
     print(new_cols)    
     df1 = spark.sql(new_cols)
     df1.write.format("parquet").mode("overwrite").option("header","true").option("path","s3://{}/{}/{}".format(s3_bucket, db_s3_path, tbl_name)).saveAsTable("{}.{}".format(glue_db_name, tbl_name))    
