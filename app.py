@@ -54,7 +54,7 @@ for idx, path in enumerate(s3_paths):
     df.createOrReplaceTempView("tmp_"+tbl_name.replace("-","_"))
     new_cols = "select  "
     for col in df.columns:
-        new_cols += "trim("+col+") as "+col.strip()+","
+        new_cols += "trim(`"+col+"`) as "+col.strip().replace(" ","_")+","
 
     new_cols = new_cols[:len(new_cols)-1] +" from tmp_"+tbl_name.replace("-","_")
     print(new_cols)    
